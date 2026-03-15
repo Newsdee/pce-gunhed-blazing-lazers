@@ -5,9 +5,9 @@ Gunhed is a fantastic PC Engine shmup, but it was notorious for having sound mix
 This ROM hack modifies the sound volume of music, sound effects, and sound samples,
 so that the game can be enjoyed at similar volume levels as other games in the PC Engine library.
 
-![Title Screen](screenshots/Gunhed (Japan)_000.png)
-![Gameplay](screenshots/Gunhed (Japan)_001.png)
-![Sound test](screenshots/Gunhed (Japan)_002.png)
+![Title Screen](screenshots/Gunhed%20(Japan)_000.png)
+![Gameplay](screenshots/Gunhed%20(Japan)_001.png)
+![Sound test](screenshots/Gunhed%20(Japan)_002.png)
 
 The file also contains an optional patch to make the ROM start directly on the sound test menu.
 
