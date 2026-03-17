@@ -40,6 +40,8 @@ Sample encoding format:
   - Decode order: LOW nibble first, HIGH nibble second
   - 4-bit value 0–15 → 8-bit unsigned PCM: value × 17
   - End-of-stream marker: byte 0x80 (sign bit set → BMI branch triggers)
+    Note: this script uses 0x00 (silence floor) for phrase-boundary detection instead,
+    since 0x80 only appears after the last phrase in a bank, not between phrases.
   - Sample rate: ~6,991 Hz (ZP rate counter $53,X = 0 → fire every IRQ)
 
 Voice SFX descriptor table
@@ -70,8 +72,9 @@ Bank layout — consecutive phrases separated by $00 silence-floor bytes
 ----------------------------------------------------------------------
 Each bank packs speech phrases back-to-back. Each descriptor points to the START of
 its own unique phrase. A $00 byte (both nibbles = 0, PCM = 0 = silence floor) marks
-the end of each phrase. The DDA playback BMI loop fires on the $80 terminator that
-follows, but the audible break begins at the $00 byte.
+the end of each phrase. Between consecutive phrases within a bank there is only a
+single $00 separator (no $80). The $80 terminator (BMI target) appears only after
+the last phrase in each bank. This script uses $00 for phrase-boundary detection.
 
   bank $09  ROM $12000–$13FFF  (3 phrases, ~2303 bytes total)
     s$33  desc[16]  ROM $12000–$12BC0   861 ms
@@ -125,7 +128,7 @@ OUT_DIR  = "bin/voice_sfx"       # Output directory for WAV files
 BANK_SIZE         = 0x2000    # 8 KB per ROM bank
 PAGE6_BASE        = 0xC000    # CPU page 6 base address (logical)
 DDA_SAMPLE_RATE   = 6991      # Hz — matches ZP rate counter = 0 (fire every IRQ ~7 kHz)
-SCAN_CAP          = 0x4000    # Maximum bytes to scan past entry for $80 end-marker
+SCAN_CAP          = 0x4000    # Maximum bytes to scan past entry for $00 phrase-end marker
 
 DESC_TABLE_ROM    = 0x278D0   # ROM address of voice SFX descriptor table
 DESC_ENTRY_SIZE   = 8
@@ -143,7 +146,7 @@ VOICE_SFX_FLAGS   = {0x88}        # flags bytes for voice SFX group (all 8 are $
 # The approx_byte_length is from the descriptor's len_hi:len_lo field.
 # For inner stream entries (e.g. s$36/$38/$39/$37) this may be the REMAINING
 # bytes from that entry to the stream end, or 0 (as desc[20] = s$36 has len=0).
-# It is NOT used for extraction — end_rom (first $80 byte) governs truncation.
+# It is NOT used for extraction — end_rom (first $00 byte) governs truncation.
 #
 VOICE_SFX_HARDCODED = [
     # sound_id  bank   ptr_logical  nibble_count  bank_layout
