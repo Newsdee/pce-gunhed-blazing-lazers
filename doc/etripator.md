@@ -1,4 +1,4 @@
-﻿# Gunhed (Japan) — Etripator Disassembly Guide
+# Gunhed (Japan) — Etripator Disassembly Guide
 
 > See also: [instructions.md](instructions.md) — full ROM analysis, sound driver RE, and volume patch records.
 
@@ -234,7 +234,7 @@ The MPR array `["ff","f8","12","13","00","00","00","00"]` maps logical pages 0-7
     {
       "logical": "EA30",
       "page": "00",
-      "text": "DDA voice streamer IRQ handler. Feeds one sample byte per interrupt to PSG_CHAN_CTRL ($0804). ZP pointers at $E0/$E1, length at $E2."
+      "text": "DDA voice streamer IRQ handler. Feeds one sample byte per interrupt to PSG_WAVE_DATA ($0806). ZP pointers at $E0/$E1, length at $E2."
     },
     {
       "logical": "6000",
